@@ -1,0 +1,12 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Sensitive
+env/*.tfvars
+*.tfvars
+backend-*.hcl
+
+# Build
+*.zip
