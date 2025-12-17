@@ -10,3 +10,5 @@ backend-*.hcl
 
 # Build
 *.zip
+
+.DS_Store
