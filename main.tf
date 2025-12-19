@@ -64,7 +64,7 @@ resource "aws_s3_bucket_public_access_block" "invoice" {
   ignore_public_acls      = true  # 忽略現有的公開 ACL
   restrict_public_buckets = true  # 限制 bucket 變公開
 }
-# 作用：確保 bucket 永遠是私有的（單據不應該公開）
+# 作用：確保 bucket 永遠是私有的，只允許特定私人連線
 
 # ============================================
 # 建立 Lambda 的 IAM Role（身份證）
@@ -86,7 +86,7 @@ resource "aws_iam_role" "lambda_role" {
   
   tags = local.common_tags
 }
-# 作用：建立 Lambda 的身份（就像員工證）
+# 作用：建立 Lambda 的身分
 
 # ============================================
 # 附加權限 1：允許寫 CloudWatch Logs
@@ -96,10 +96,10 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 # 作用：讓 Lambda 可以寫日誌到 CloudWatch
-# 使用 AWS 官方的 Policy（不用自己寫）
+# 官方的 Policy（
 
 # ============================================
-# 附加權限 2：允許讀取 S3（自定義，更安全）
+# 附加權限 2：允許讀取 S3（自定義）
 # ============================================
 resource "aws_iam_role_policy" "lambda_s3_access" {
   name = "lambda-s3-access"
@@ -181,7 +181,6 @@ resource "aws_lambda_permission" "allow_s3_invoke" {
   source_arn    = aws_s3_bucket.invoice.arn         # 只有這個 bucket
 }
 # 作用：允許 S3 觸發 Lambda
-# 就像門禁卡：只有這個 bucket 有權限按門鈴
 
 # ============================================
 # 設定 S3 Event Notification（觸發器）
@@ -201,7 +200,7 @@ resource "aws_s3_bucket_notification" "on_upload" {
   # 確保 Lambda Permission 先建立好
   depends_on = [aws_lambda_permission.allow_s3_invoke]
 }
-# 作用：設定「S3 上傳檔案 → 觸發 Lambda」
-# 對應 Console 的「Add Trigger」
+
+# 對應 Console 的「Add Trigger」，在lambda 設置 trigger後，同步S3 的 notification
 
 
