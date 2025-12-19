@@ -22,4 +22,3 @@ output "cloudwatch_log_group" {
   description = "CloudWatch Log Group 名稱"
   value       = aws_cloudwatch_log_group.lambda_logs.name
 }
-# 作用：terraform apply 完成後顯示這些資訊

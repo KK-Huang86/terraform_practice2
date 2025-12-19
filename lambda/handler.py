@@ -51,12 +51,11 @@ def lambda_handler(event, context):
         # 目前時間
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # 準備 Discord 訊息（使用 Embed 格式）
         payload = {
             "content": "新單據上傳通知",
             "embeds": [{
-                "title": "📋 檔案資訊",
-                "color": 5763719,  # 綠色
+                "title": "檔案資訊",
+                "color": 5763719,  # 背景色
                 "fields": [
                     {
                         "name": "儲存位置_S3",
@@ -125,30 +124,6 @@ def lambda_handler(event, context):
                 "file": object_key,
                 "size": size_str
             })
-        }
-        
-    except KeyError as e:
-        error_msg = f"事件格式錯誤: {str(e)}"
-        print(f"❌ {error_msg}")
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"error": error_msg})
-        }
-        
-    except urllib.error.HTTPError as e:
-        error_msg = f"Discord API HTTP 錯誤: {e.code} - {e.reason}"
-        print(f"❌ {error_msg}")
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": error_msg})
-        }
-        
-    except urllib.error.URLError as e:
-        error_msg = f"Discord API 連線錯誤: {str(e.reason)}"
-        print(f"❌ {error_msg}")
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": error_msg})
         }
         
     except Exception as e:
